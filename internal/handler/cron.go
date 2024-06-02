@@ -20,6 +20,7 @@ func (h *Handler) OnCronHandler() {
 	getMessageParams := repository.MessageLimitationParams{
 		Since: time.Now().Add(-24 * time.Hour),
 		Until: time.Now(),
+		Order: "desc",
 	}
 	for _, channel := range channels {
 		messages, err := h.repo2.GetMessage(channel.ID, &getMessageParams)
