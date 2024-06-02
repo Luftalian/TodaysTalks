@@ -1,10 +1,13 @@
 package main
 
 import (
+	"log"
 	"os"
 	"time"
 
 	"github.com/Luftalian/TodaysTalks/internal/handler"
+	"github.com/Luftalian/TodaysTalks/internal/migration"
+	"github.com/Luftalian/TodaysTalks/internal/pkg/config"
 	"github.com/Luftalian/TodaysTalks/internal/repository"
 	"github.com/jmoiron/sqlx"
 	"github.com/robfig/cron/v3"
@@ -20,18 +23,17 @@ func main() {
 		panic(err)
 	}
 
-	// // connect to database
-	// db, err := sqlx.Connect("mysql", config.MySQL().FormatDSN())
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// defer db.Close()
+	// connect to database
+	db, err := sqlx.Connect("mysql", config.MySQL().FormatDSN())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
 
-	// // migrate tables
-	// if err := migration.MigrateTables(db.DB); err != nil {
-	// 	log.Fatal(err)
-	// }
-	db := &sqlx.DB{}
+	// migrate tables
+	if err := migration.MigrateTables(db.DB); err != nil {
+		log.Fatal(err)
+	}
 
 	loc, _ := time.LoadLocation("Asia/Tokyo")
 	c := cron.New(cron.WithLocation(loc))
