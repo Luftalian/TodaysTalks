@@ -25,5 +25,5 @@ func (h *Handler) SetupSubscriptionEvent(bot *traqwsbot.Bot) {
 }
 
 func (h *Handler) SetUpCron(c *cron.Cron) {
-	c.AddFunc("45 * * * *", h.OnCronHandler)
+	c.AddFunc("12 * * * *", h.OnCronHandler)
 }
