@@ -1,33 +1,29 @@
 package handler
 
 import (
-	"github.com/ras0q/go-backend-template/internal/repository"
-
-	"github.com/labstack/echo/v4"
+	"github.com/Luftalian/TodaysTalks/internal/repository"
+	"github.com/robfig/cron/v3"
+	traqwsbot "github.com/traPtitech/traq-ws-bot"
 )
 
 type Handler struct {
-	repo *repository.Repository
+	repo  *repository.Repository
+	repo2 *repository.Repository2
 }
 
-func New(repo *repository.Repository) *Handler {
+func New(repo *repository.Repository, repo2 *repository.Repository2) *Handler {
 	return &Handler{
-		repo: repo,
+		repo:  repo,
+		repo2: repo2,
 	}
 }
 
-func (h *Handler) SetupRoutes(api *echo.Group) {
-	// ping API
-	pingAPI := api.Group("/ping")
-	{
-		pingAPI.GET("", h.Ping)
-	}
+func (h *Handler) SetupSubscriptionEvent(bot *traqwsbot.Bot) {
+	bot.OnPing(h.OnPingHandler)
+	bot.OnError(h.OnErrorHandler)
+	bot.OnMessageCreated(h.OnMessageCreatedHandler)
+}
 
-	// user API
-	userAPI := api.Group("/users")
-	{
-		userAPI.GET("", h.GetUsers)
-		userAPI.POST("", h.CreateUser)
-		userAPI.GET("/:userID", h.GetUser)
-	}
+func (h *Handler) SetUpCron(c *cron.Cron) {
+	c.AddFunc("15 * * * * *", h.OnCronHandler)
 }

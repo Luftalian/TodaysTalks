@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"net/http"
+	"log"
 
-	"github.com/labstack/echo/v4"
+	"github.com/traPtitech/traq-ws-bot/payload"
 )
 
-func (h *Handler) Ping(c echo.Context) error {
-	return c.String(http.StatusOK, "pong")
+func (h *Handler) OnPingHandler(p *payload.Ping) {
+	log.Println("Received PING event: " + p.Base.EventTime.String())
 }

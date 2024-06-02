@@ -1,42 +1,54 @@
 package main
 
 import (
-	"github.com/ras0q/go-backend-template/internal/handler"
-	"github.com/ras0q/go-backend-template/internal/migration"
-	"github.com/ras0q/go-backend-template/internal/pkg/config"
-	"github.com/ras0q/go-backend-template/internal/repository"
+	"log"
+	"os"
 
+	"github.com/Luftalian/TodaysTalks/internal/handler"
+	"github.com/Luftalian/TodaysTalks/internal/migration"
+	"github.com/Luftalian/TodaysTalks/internal/pkg/config"
+	"github.com/Luftalian/TodaysTalks/internal/repository"
 	"github.com/jmoiron/sqlx"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/robfig/cron/v3"
+	traqwsbot "github.com/traPtitech/traq-ws-bot"
 )
 
 func main() {
-	e := echo.New()
-
-	// middlewares
-	e.Use(middleware.Recover())
-	e.Use(middleware.Logger())
+	bot, err := traqwsbot.NewBot(&traqwsbot.Options{
+		AccessToken: os.Getenv("ACCESS_TOKEN"), // Required
+		Origin:      "wss://q.trap.jp",         // Optional (default: wss://q.trap.jp)
+	})
+	if err != nil {
+		panic(err)
+	}
 
 	// connect to database
 	db, err := sqlx.Connect("mysql", config.MySQL().FormatDSN())
 	if err != nil {
-		e.Logger.Fatal(err)
+		log.Fatal(err)
 	}
 	defer db.Close()
 
 	// migrate tables
 	if err := migration.MigrateTables(db.DB); err != nil {
-		e.Logger.Fatal(err)
+		log.Fatal(err)
 	}
+	// db := &sqlx.DB{}
+
+	c := cron.New()
 
 	// setup repository
 	repo := repository.New(db)
+	repo2 := repository.New2(bot.API())
 
 	// setup routes
-	h := handler.New(repo)
-	v1API := e.Group("/api/v1")
-	h.SetupRoutes(v1API)
+	h := handler.New(repo, repo2)
+	h.SetupSubscriptionEvent(bot)
+	h.SetUpCron(c)
 
-	e.Logger.Fatal(e.Start(config.AppAddr()))
+	c.Start()
+
+	if err := bot.Start(); err != nil {
+		panic(err)
+	}
 }

@@ -1,14 +1,15 @@
 package integration
 
 import (
-	"github.com/ras0q/go-backend-template/internal/handler"
-	"github.com/ras0q/go-backend-template/internal/migration"
-	"github.com/ras0q/go-backend-template/internal/pkg/config"
-	"github.com/ras0q/go-backend-template/internal/repository"
 	"log"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/Luftalian/TodaysTalks/internal/handler"
+	"github.com/Luftalian/TodaysTalks/internal/migration"
+	"github.com/Luftalian/TodaysTalks/internal/pkg/config"
+	"github.com/Luftalian/TodaysTalks/internal/repository"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/uuid"
