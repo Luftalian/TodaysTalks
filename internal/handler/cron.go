@@ -41,8 +41,10 @@ func (h *Handler) OnCronHandler() {
 
 func connectMessage(messages []traq.Message) string {
 	var connectedText string
+	connectedText = "```\n"
 	for _, message := range messages {
 		connectedText += "- " + message.Content + "\n"
 	}
+	connectedText += "```"
 	return connectedText
 }
