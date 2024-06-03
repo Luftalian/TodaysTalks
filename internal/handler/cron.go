@@ -3,7 +3,6 @@ package handler
 import (
 	"context"
 	"log"
-	"os"
 	"time"
 
 	"github.com/Luftalian/TodaysTalks/internal/repository"
@@ -24,12 +23,17 @@ func (h *Handler) OnCronHandler() {
 		Order: "asc",
 	}
 	for _, channel := range channels {
-		messages, err := h.repo2.GetMessage(channel.ID, &getMessageParams)
+		messages, err := h.repo2.GetMessages(channel.ID, &getMessageParams)
 		if err != nil {
 			log.Println(err)
 			continue
 		}
-		connectedText := connectMessage(messages)
+		channelInfo, err := h.repo.GetChannelByID(context.Background(), channel.ID)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		connectedText := connectOnlyFromUserIDMessage(messages, channelInfo.UserID)
 		if connectedText == "" {
 			continue
 		}
@@ -40,11 +44,11 @@ func (h *Handler) OnCronHandler() {
 	}
 }
 
-func connectMessage(messages []traq.Message) string {
+func connectOnlyFromUserIDMessage(messages []traq.Message, userId string) string {
 	var connectedText string
 	for _, message := range messages {
 		log.Println(message.UserId)
-		if message.UserId == os.Getenv("USER_ME_ID") {
+		if message.UserId == userId {
 			connectedText += "- " + message.Content + "\n"
 		}
 	}

@@ -33,7 +33,7 @@ func (r *Repository2) PostMessage(message string, embed bool, ChannelID string) 
 	return nil
 }
 
-func (r *Repository2) GetMessage(ChannelID string, params *MessageLimitationParams) ([]traq.Message, error) {
+func (r *Repository2) GetMessages(ChannelID string, params *MessageLimitationParams) ([]traq.Message, error) {
 	limit := int32(0)
 	offset := int32(0)
 	since := time.Time{}
@@ -59,6 +59,17 @@ func (r *Repository2) GetMessage(ChannelID string, params *MessageLimitationPara
 		Until(until).
 		Inclusive(inclusive).
 		Order(order).
+		Execute()
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (r *Repository2) GetMessage(MessageID string) (*traq.Message, error) {
+	resp, _, err := r.apiClient.
+		MessageApi.
+		GetMessage(context.Background(), MessageID).
 		Execute()
 	if err != nil {
 		return nil, err

@@ -37,8 +37,9 @@ func (h *Handler) OnMessageCreatedHandler(p *payload.MessageCreated) {
 				return
 			}
 			subscribeChannelParams := repository.SubscribeChannelParams{
-				ID:   p.Message.ChannelID,
-				Name: p.Message.ChannelID,
+				ID:     p.Message.ChannelID,
+				Name:   p.Message.ChannelID,
+				UserID: p.Message.User.ID,
 			}
 			err = h.repo.SubscribeChannel(context.Background(), subscribeChannelParams)
 			if err != nil {
