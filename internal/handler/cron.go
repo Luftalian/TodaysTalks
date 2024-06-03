@@ -18,7 +18,7 @@ func (h *Handler) OnCronHandler() {
 		return
 	}
 	getMessageParams := repository.MessageLimitationParams{
-		Since: time.Now().Add(-24 * time.Hour),
+		Since: time.Now().Add(-23*time.Hour - 50*time.Minute),
 		Until: time.Now(),
 		Order: "asc",
 	}
