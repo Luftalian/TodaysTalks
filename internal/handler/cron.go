@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"log"
+	"os"
 	"time"
 
 	"github.com/Luftalian/TodaysTalks/internal/repository"
@@ -18,7 +19,7 @@ func (h *Handler) OnCronHandler() {
 		return
 	}
 	getMessageParams := repository.MessageLimitationParams{
-		Since: time.Now().Add(-23*time.Hour - 50*time.Minute),
+		Since: time.Now().Add(-24 * time.Hour),
 		Until: time.Now(),
 		Order: "asc",
 	}
@@ -41,10 +42,11 @@ func (h *Handler) OnCronHandler() {
 
 func connectMessage(messages []traq.Message) string {
 	var connectedText string
-	connectedText = "```\n"
 	for _, message := range messages {
-		connectedText += "- " + message.Content + "\n"
+		log.Println(message.UserId)
+		if message.UserId == os.Getenv("USER_ME_ID") {
+			connectedText += "- " + message.Content + "\n"
+		}
 	}
-	connectedText += "```"
 	return connectedText
 }
