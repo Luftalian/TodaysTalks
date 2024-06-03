@@ -22,6 +22,7 @@ func (h *Handler) SetupSubscriptionEvent(bot *traqwsbot.Bot) {
 	bot.OnPing(h.OnPingHandler)
 	bot.OnError(h.OnErrorHandler)
 	bot.OnMessageCreated(h.OnMessageCreatedHandler)
+	bot.OnBotMessageStampsUpdated(h.OnBotMessageStampsUpdatedHandler)
 }
 
 func (h *Handler) SetUpCron(c *cron.Cron) {

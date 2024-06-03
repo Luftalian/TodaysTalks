@@ -12,7 +12,6 @@ import (
 
 func (h *Handler) OnMessageCreatedHandler(p *payload.MessageCreated) {
 	log.Println("Received MESSAGE_CREATED event: " + p.Message.Text)
-	log.Println(p.Message.Embedded[0].ID)
 	if ok := checkMention(p.Message.Embedded); ok {
 		message := p.Message.Text
 		if strings.Contains(message, "/help") {
