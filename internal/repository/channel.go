@@ -30,7 +30,7 @@ func (r *Repository) GetChannels(ctx context.Context) ([]*Channel, error) {
 }
 
 func (r *Repository) SubscribeChannel(ctx context.Context, params SubscribeChannelParams) error {
-	if _, err := r.db.ExecContext(ctx, "INSERT INTO channels (id, name) VALUES (?, ?, ?)", params.ID, params.Name, params.UserID); err != nil {
+	if _, err := r.db.ExecContext(ctx, "INSERT INTO channels (id, name, user_id) VALUES (?, ?, ?)", params.ID, params.Name, params.UserID); err != nil {
 		return fmt.Errorf("insert channel: %w", err)
 	}
 
