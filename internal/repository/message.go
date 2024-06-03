@@ -65,3 +65,29 @@ func (r *Repository2) GetMessage(ChannelID string, params *MessageLimitationPara
 	}
 	return resp, nil
 }
+
+func (r *Repository2) DeleteMessage(MessageID string) error {
+	_, err := r.apiClient.
+		MessageApi.
+		DeleteMessage(context.Background(), MessageID).
+		Execute()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *Repository2) EditMessage(MessageID string, message string, embed bool) error {
+	_, err := r.apiClient.
+		MessageApi.
+		EditMessage(context.Background(), MessageID).
+		PostMessageRequest(traq.PostMessageRequest{
+			Content: message,
+			Embed:   &embed,
+		}).
+		Execute()
+	if err != nil {
+		return err
+	}
+	return nil
+}
