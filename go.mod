@@ -10,7 +10,7 @@ require (
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/ory/dockertest/v3 v3.10.0
-	github.com/pressly/goose/v3 v3.20.0
+	github.com/pressly/goose/v3 v3.21.1
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/traPtitech/go-traq v0.0.0-20220426061605-adc15dcfc6d0
 	github.com/traPtitech/traq-ws-bot v1.1.3
